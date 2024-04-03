@@ -1,0 +1,59 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+    <title>Результаты теста</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <h1>Результаты теста</h1>
+            <h2>Информация о попытке</h2>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">Номер попытки: {{ num }}</p>
+            <p class="card-text">Студент: {{ attempt.user }}</p>
+            <p class="card-text">Тест: {{ attempt.test }}</p>
+            <p class="card-text">Дата и время прохождения: {{ attempt.timestamp }}</p>
+        </div>
+    </div>
+
+    <h2>Результаты</h2>
+    <div class="card">
+        <div class="card-body">
+            <p class="card-text">Баллы: {{ attempt.score }}</p>
+            <p class="card-text">Всего вопросов: {{ attempt.test.get_questions.count }}</p>
+            <p class="card-text">Правильных ответов: {{ attempt.correct_answers }}</p>
+            <p class="card-text">Процент правильных ответов: {{ procent }}%</p>
+        </div>
+    </div>
+
+    <!-- Здесь можно добавить дополнительную информацию о результатах теста -->
+
+    <h2>Ответы на вопросы</h2>
+    <div class="accordion" id="questionAccordion">
+        {% for question in attempt.questions.all %}
+            <div class="card">
+                <div class="card-header" id="question{{ question.id }}Heading">
+                    <h3 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#question{{ question.id }}Collapse" aria-expanded="true" aria-controls="question{{ question.id }}Collapse">
+                            {{ question.text }}
+                        </button>
+                    </h3>
+                </div>
+
+                <div id="question{{ question.id }}Collapse" class="collapse" aria-labelledby="question{{ question.id }}Heading" data-parent="#questionAccordion">
+                    <div class="card-body">
+                        <ul>
+                        {% for answer in question.selected_answers.all %}
+                            <li>{{ answer }}</li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+{% endblock %}
